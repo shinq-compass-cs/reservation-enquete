@@ -345,6 +345,15 @@ function renderGroupScreen(qIds) {
  * @returns {string} HTML
  */
 function renderQuestion(q) {
+  // 動的ラベルの解決（Q3 の回答に応じて Q7 の質問文を切り替え）
+  let label = q.label;
+  if (q.dynamic_label) {
+    const sourceVal = state.answers[q.dynamic_label.source];
+    if (sourceVal && q.dynamic_label.map[sourceVal]) {
+      label = q.dynamic_label.map[sourceVal];
+    }
+  }
+
   const requiredBadge = q.required ? '<span class="required-badge">※必須</span>' : '';
   const subLabel = q.sub_label ? `<div class="question-sub-label">${escHtml(q.sub_label)}</div>` : '';
   const note = q.note ? `<div class="question-note">${escHtml(q.note)}</div>` : '';
@@ -380,7 +389,7 @@ function renderQuestion(q) {
     <div class="question-card" data-qid="${q.id}">
       <div class="question-header">
         <div class="question-label">
-          ${escHtml(q.label)}${requiredBadge}
+          ${escHtml(label)}${requiredBadge}
         </div>
         ${subLabel}
         ${choiceTypeBadge}

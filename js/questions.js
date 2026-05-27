@@ -50,14 +50,14 @@ const QUESTIONS = [
     section: 'B',
     type: 'single_choice',
     label: '現在、どんなふうに予約管理をしていますか？',
-    sub_label: '予約を集約している場所をお答えください',
+    sub_label: '予約台帳を選んでください',
     required: true,
     is_branching_source: true,
     options: [
-      { value: 'paper', label: '紙で管理' },
-      { value: 'excel', label: 'Excel・スプレッドシートで管理' },
-      { value: 'google_calendar', label: 'Googleカレンダーで管理' },
-      { value: 'reservation_tool', label: '予約管理ツール（オンラインの予約システム）' },
+      { value: 'paper', label: '紙' },
+      { value: 'excel', label: 'エクセル・スプレッドシート' },
+      { value: 'google_calendar', label: 'Googleカレンダー' },
+      { value: 'reservation_tool', label: '予約管理ツール（オンラインシステム）' },
       {
         value: 'other',
         label: 'その他',
@@ -73,8 +73,9 @@ const QUESTIONS = [
     id: 'Q4',
     section: 'B',
     type: 'single_choice',
-    label: '使っている予約管理ツールを教えてください',
+    label: '具体的に、どのツールで予約管理をしていますか？',
     required: true,
+    note: '予約台帳のツールを選んでください',
     display_condition: "Q3 == 'reservation_tool'",
     options: [
       { value: 'stores', label: 'STORES 予約' },
@@ -285,7 +286,17 @@ const QUESTIONS = [
     id: 'Q7',
     section: 'C',
     type: 'multiple_choice',
-    label: '予約のオンライン化・ツール導入をためらう理由は？',
+    label: '予約のオンライン化・ツール導入をためらう理由は？', // Q3未回答時のフォールバック
+    dynamic_label: {
+      source: 'Q3',
+      map: {
+        paper:            '予約のオンライン化・管理ツール導入をためらう理由は？',
+        excel:            '予約管理ツール導入をためらう理由は？',
+        google_calendar:  '予約管理ツール導入をためらう理由は？',
+        reservation_tool: 'もっと良い予約管理ツールがあった場合、それでも移行をためらう理由は？',
+        other:            '予約のオンライン化・管理ツール導入をためらう理由は？',
+      },
+    },
     required: false,
     options: [
       { value: 'data_migration', label: '既存データの移行が大変そう' },
@@ -315,7 +326,7 @@ const QUESTIONS = [
     id: 'Q8',
     section: 'D',
     type: 'multiple_choice',
-    label: '予約を（紙・エクセル・予約ツール）に記録するタイミングは？',
+    label: '予約を（紙・エクセル・予約ツールなど）に記録するタイミングは？',
     required: false,
     options: [
       { value: 'immediately', label: '予約を受けた瞬間' },
@@ -375,10 +386,10 @@ const COLUMN_ORDER = [
  */
 const VALUE_LABELS = {
   // Q3
-  paper:              '紙で管理',
-  excel:              'Excel・Googleスプレッドシートで管理',
-  google_calendar:    'Googleカレンダーで管理',
-  reservation_tool:   '予約管理ツール',
+  paper:              '紙',
+  excel:              'エクセル・スプレッドシート',
+  google_calendar:    'Googleカレンダー',
+  reservation_tool:   '予約管理ツール（オンラインシステム）',
   // Q4
   stores:             'STORES予約',
   airreserve:         'Airリザーブ',
