@@ -332,20 +332,8 @@ const QUESTIONS = [
     other_text_column: 'q8_other_text',
   },
 
-  // ─── Section E ───────────────────────────────────────────────
-  // Q9（改善への興味）は削除済み
-  {
-    id: 'Q10',
-    section: 'E',
-    type: 'text_area',
-    label: 'どんな条件・機能・サポートがあれば予約管理ツールを使いますか？',
-    required: false,
-    validation: { max_length: 500 },
-    placeholder: '例：月額3,000円以内なら、LINEと連携できるなら、使い方を教えてくれるなら...',
-    column_name: 'q10_required_conditions',
-  },
-
   // ─── Section F ───────────────────────────────────────────────
+  // ※ Section E (Q9, Q10) は削除済み
   {
     id: 'Q11',
     section: 'F',
@@ -377,8 +365,8 @@ const COLUMN_ORDER = [
   'q7_other_text',
   'q8_recording_timing',
   'q8_other_text',
-  'q9_interest_level',
-  'q10_required_conditions',
+  'q9_interest_level',   // Q9削除済み（列は維持）
+  'q10_required_conditions', // Q10削除済み（列は維持）
   'q11_free_comment',
   'user_agent',
   'completion_time_seconds',

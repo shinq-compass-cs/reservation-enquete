@@ -24,8 +24,7 @@ const QUESTION_SECTION_MAP = {
   Q3: 'B', Q4: 'B', Q4_2: 'B',
   Q5: 'C', Q6: 'C', Q7: 'C',
   Q8: 'D',
-  Q10: 'E',
-  Q11: 'F',
+  Q11: 'E',
 };
 
 /**

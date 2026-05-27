@@ -24,8 +24,8 @@ function getVisibleQuestions(answers) {
     list.push('Q4');
   }
 
-  // Q9 削除済み・Q10 は常時表示
-  list.push('Q4_2', 'Q5', 'Q6', 'Q7', 'Q8', 'Q10', 'Q11');
+  // Q9・Q10 削除済み
+  list.push('Q4_2', 'Q5', 'Q6', 'Q7', 'Q8', 'Q11');
   return list;
 }
 

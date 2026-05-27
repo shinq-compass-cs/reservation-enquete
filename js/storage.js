@@ -165,8 +165,8 @@ function buildPayload(answers, formState, completionTimeSec) {
     q7_other_text: fs.q7_other_text || '',
     q8_recording_timing: toCSV(answers['Q8']),
     q8_other_text: fs.q8_other_text || '',
-    q9_interest_level: '',   // Q9削除済み
-    q10_required_conditions: String(answers['Q10'] || '').trim(),
+    q9_interest_level: '',          // Q9削除済み
+    q10_required_conditions: '',    // Q10削除済み
     q11_free_comment: String(answers['Q11'] || '').trim(),
     user_agent: navigator.userAgent,
     completion_time_seconds: completionTimeSec || 0,
