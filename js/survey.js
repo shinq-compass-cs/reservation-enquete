@@ -366,6 +366,18 @@ function renderQuestion(q) {
     choiceTypeBadge = '<span class="choice-type-badge choice-type-multi">複数選択可</span>';
   }
 
+  // Q3 分岐のある設問に「※○○を使っている方にお聞きします」を動的挿入
+  let dynamicNote = '';
+  if (q.q3_note) {
+    const q3Val = state.answers['Q3'];
+    const q3Option = q3Val
+      ? (getQuestion('Q3')?.options || []).find((opt) => opt.value === q3Val)
+      : null;
+    if (q3Option) {
+      dynamicNote = `<div class="question-note">※${escHtml(q3Option.label)}を使っている方にお聞きします</div>`;
+    }
+  }
+
   let inputHtml = '';
   switch (q.type) {
     case 'text':
@@ -392,6 +404,7 @@ function renderQuestion(q) {
           ${escHtml(label)}${requiredBadge}
         </div>
         ${subLabel}
+        ${dynamicNote}
         ${choiceTypeBadge}
         ${note}
       </div>

@@ -107,6 +107,7 @@ const QUESTIONS = [
     type: 'multiple_choice',
     label: '予約の受付経路を教えてください',
     required: true,
+    sub_label: '※使っているものを全てお答えください',
     options: [
       { value: 'phone', label: '電話' },
       { value: 'in_store', label: '店頭（口頭）' },
@@ -137,6 +138,7 @@ const QUESTIONS = [
     type: 'multiple_choice',
     label: '予約管理で困っていることは？',
     required: false,
+    q3_note: true,
     options: [
       {
         value: 'double_booking',
@@ -220,6 +222,7 @@ const QUESTIONS = [
     type: 'multiple_choice',
     label: '今の予約管理方法で気に入っている点は？',
     required: false,
+    q3_note: true,
     options: [
       {
         value: 'familiar',
@@ -298,6 +301,7 @@ const QUESTIONS = [
       },
     },
     required: false,
+    q3_note: true,
     options: [
       { value: 'data_migration', label: '既存データの移行が大変そう' },
       { value: 'learn_operation', label: '操作を覚えるのが大変' },
