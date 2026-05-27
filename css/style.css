@@ -278,7 +278,7 @@ body {
 
 .question-card {
   background: var(--section-accent-light);
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   box-shadow: var(--shadow-card);
   padding: 24px 20px;
   margin-bottom: 8px;
