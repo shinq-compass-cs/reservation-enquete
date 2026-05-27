@@ -124,29 +124,12 @@ const QUESTIONS = [
       },
       {
         value: 'not_using',
-        label: 'ネット集客は活用していない', // Q3=reservation_tool のとき動的に変更
+        label: 'ネット集客は活用していない',
         exclusive: true,
-        dynamic_label: {
-          when: "Q3 == 'reservation_tool'",
-          label: 'Q4で選んだサービス以外には活用していない',
-        },
       },
     ],
     column_name: 'q4_2_marketing_channels',
     other_text_column: 'q4_2_other_text',
-    // Q4-2 の動的フィルタリングルール（branching.js で処理）
-    dynamic_filtering: {
-      rules: [
-        { when: "Q4 == 'hpb'", exclude_options: ['hpb'] },
-        { when: "Q4 == 'epark'", exclude_options: ['epark'] },
-        { when: "Q4 == 'ekiten'", exclude_options: ['ekiten'] },
-        { when: "Q4 == 'kenkonihari'", exclude_options: ['kenkonihari'] },
-        { when: "Q4 == 'shinkyu'", exclude_options: ['shinkyu_compass'] },
-        { when: "Q4 == 'line_tool'", exclude_options: ['line_official'] },
-        { when: "Q4 == 'hp_form'", exclude_options: ['own_website'] },
-      ],
-      exception: "Q4 == 'other'", // その他なら除外なし
-    },
   },
 
   // ─── Section C ───────────────────────────────────────────────

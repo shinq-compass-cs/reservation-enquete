@@ -145,19 +145,6 @@ function buildPayload(answers, formState, completionTimeSec) {
     return toJP(val);
   }
 
-  // Q4_2 の not_using は Q3 の値によって文言が異なる
-  function toCSVQ4_2(val) {
-    if (!Array.isArray(val)) return toJP(val);
-    return val.map((v) => {
-      if (v === 'not_using') {
-        return answers['Q3'] === 'reservation_tool'
-          ? 'Q4で選んだサービス以外には活用していない'
-          : 'ネット集客は活用していない';
-      }
-      return toJP(v);
-    }).join(',');
-  }
-
   const fs = formState || {};
 
   return {
@@ -168,7 +155,7 @@ function buildPayload(answers, formState, completionTimeSec) {
     q3_other_text: fs.q3_other_text || '',
     q4_reservation_tool: toJP(answers['Q4']),
     q4_other_text: fs.q4_other_text || '',
-    q4_2_marketing_channels: toCSVQ4_2(answers['Q4_2']),
+    q4_2_marketing_channels: toCSV(answers['Q4_2']),
     q4_2_other_text: fs.q4_2_other_text || '',
     q5_difficulties: toCSV(answers['Q5']),
     q5_other_text: fs.q5_other_text || '',

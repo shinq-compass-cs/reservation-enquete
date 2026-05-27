@@ -30,48 +30,14 @@ function getVisibleQuestions(answers) {
 }
 
 /**
- * Q4_2 の表示選択肢を返す（動的フィルタリング + 動的文言切り替え）
+ * Q4_2 の表示選択肢を返す
+ * ※ 動的フィルタリング・動的文言切り替えは廃止
+ *    Q4で選んだサービスも含む全選択肢をそのまま返す
  * @param {Object} answers
- * @returns {Array} - フィルタリング済みの選択肢配列
+ * @returns {Array}
  */
 function getQ4_2Options(answers) {
-  const q3 = answers['Q3'];
-  const q4 = answers['Q4'];
-
-  const questionDef = getQuestion('Q4_2');
-  // ディープコピーして元データを汚染しない
-  let options = questionDef.options.map((opt) => ({ ...opt }));
-
-  // Q3=reservation_tool かつ Q4 != other の場合、対応する選択肢を除外
-  if (q3 === 'reservation_tool' && q4 && q4 !== 'other') {
-    const excludeMap = {
-      hpb: ['hpb'],
-      epark: ['epark'],
-      ekiten: ['ekiten'],
-      kenkonihari: ['kenkonihari'],
-      shinkyu: ['shinkyu_compass'],
-      line_tool: ['line_official'],
-      hp_form: ['own_website'],
-    };
-    const toExclude = excludeMap[q4] || [];
-    options = options.filter((opt) => !toExclude.includes(opt.value));
-  }
-
-  // 排他選択肢「not_using」の動的文言切り替え
-  options = options.map((opt) => {
-    if (opt.value === 'not_using') {
-      return {
-        ...opt,
-        label:
-          q3 === 'reservation_tool'
-            ? 'Q4で選んだサービス以外には活用していない'
-            : 'ネット集客は活用していない',
-      };
-    }
-    return opt;
-  });
-
-  return options;
+  return getQuestion('Q4_2').options;
 }
 
 /**
