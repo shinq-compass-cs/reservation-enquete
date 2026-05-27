@@ -8,28 +8,24 @@
 
 /**
  * 現在の回答状態をもとに表示する設問IDの配列を返す
+ * - Q1・Q2は 'Q1_Q2' として1画面にグループ化
+ * - Q9は削除済み、Q10は常時表示
  * @param {Object} answers - { Q1: 'value', Q2: 'email', ... }
  * @returns {string[]} - 表示順の設問ID配列
  */
 function getVisibleQuestions(answers) {
   const q3 = answers['Q3'];
-  const q9 = answers['Q9'];
 
-  const list = ['Q1', 'Q2', 'Q3'];
+  // Q1+Q2 を1画面にまとめた仮想ID 'Q1_Q2' を使用
+  const list = ['Q1_Q2', 'Q3'];
 
   // Q3=reservation_tool のときだけ Q4 を表示
   if (q3 === 'reservation_tool') {
     list.push('Q4');
   }
 
-  list.push('Q4_2', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9');
-
-  // Q9=very_interested / conditional のときだけ Q10 を表示
-  if (q9 === 'very_interested' || q9 === 'conditional') {
-    list.push('Q10');
-  }
-
-  list.push('Q11');
+  // Q9 削除済み・Q10 は常時表示
+  list.push('Q4_2', 'Q5', 'Q6', 'Q7', 'Q8', 'Q10', 'Q11');
   return list;
 }
 

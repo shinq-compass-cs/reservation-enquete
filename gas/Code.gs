@@ -20,28 +20,28 @@ const SHEET_NAME     = 'survey_responses';
 
 // 列構成（フロントエンドの COLUMN_ORDER と一致させること）
 const HEADERS = [
-  'timestamp',
-  'q1_clinic_name',
-  'q2_email',
-  'q3_management_type',
-  'q3_other_text',
-  'q4_reservation_tool',
-  'q4_other_text',
-  'q4_2_marketing_channels',
-  'q4_2_other_text',
-  'q5_difficulties',
-  'q5_other_text',
-  'q6_likes',
-  'q6_other_text',
-  'q7_concerns',
-  'q7_other_text',
-  'q8_recording_timing',
-  'q8_other_text',
-  'q9_interest_level',
-  'q10_required_conditions',
-  'q11_free_comment',
-  'user_agent',
-  'completion_time_seconds',
+  '送信日時',
+  '院名',
+  'メールアドレス',
+  'Q3_予約管理方法',
+  'Q3_その他',
+  'Q4_予約管理ツール',
+  'Q4_その他',
+  'Q4_2_予約受付経路',
+  'Q4_2_その他',
+  'Q5_困っていること',
+  'Q5_その他',
+  'Q6_気に入っている点',
+  'Q6_その他',
+  'Q7_オンライン化への不安',
+  'Q7_その他',
+  'Q8_記録タイミング',
+  'Q8_その他',
+  'Q9_改善への興味',
+  'Q10_条件・機能・サポート',
+  'Q11_自由意見・要望',
+  'ブラウザ情報',
+  '回答時間（秒）',
 ];
 
 // ─── Web App エントリーポイント ───────────────────────────────────
@@ -110,16 +110,22 @@ function _getOrCreateSheet(ss) {
   const lastRow  = sheet.getLastRow();
 
   if (lastRow === 0) {
+    // シートが空 → ヘッダー新規作成
     sheet.appendRow(HEADERS);
     _formatHeaderRow(sheet);
   } else {
     const firstCell = sheet.getRange(1, 1).getValue();
-    if (firstCell !== 'timestamp') {
-      // ヘッダー行が存在しない場合は先頭に挿入
+    if (firstCell === 'timestamp') {
+      // 旧英語ヘッダーが残っている → 日本語ヘッダーに上書き
+      sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+      _formatHeaderRow(sheet);
+    } else if (firstCell !== '送信日時') {
+      // ヘッダー行がない → 先頭に挿入
       sheet.insertRowBefore(1);
       sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
       _formatHeaderRow(sheet);
     }
+    // firstCell === '送信日時' の場合はすでに最新 → 何もしない
   }
 
   return sheet;
@@ -145,7 +151,7 @@ function _findRowByEmail(sheet, email) {
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return -1;
 
-  const emailColIndex = HEADERS.indexOf('q2_email') + 1; // 1始まり
+  const emailColIndex = HEADERS.indexOf('メールアドレス') + 1; // 1始まり
   const emailValues   = sheet
     .getRange(2, emailColIndex, lastRow - 1, 1)
     .getValues();

@@ -41,7 +41,6 @@ const QUESTIONS = [
     required: true,
     validation: { format: 'email', max_length: 200 },
     placeholder: 'example@clinic.jp',
-    note: '結果レポートの送付先として使用します',
     column_name: 'q2_email',
   },
 
@@ -105,9 +104,11 @@ const QUESTIONS = [
     id: 'Q4_2',
     section: 'B',
     type: 'multiple_choice',
-    label: '集客やネット予約受付のために使っているサービスはありますか？',
+    label: '予約を受付けしている経路を教えてください',
     required: true,
     options: [
+      { value: 'phone', label: '電話' },
+      { value: 'in_store', label: '店頭（その場で口頭）' },
       { value: 'hpb', label: 'ホットペッパービューティー(サロンボード)' },
       { value: 'epark', label: 'EPARK' },
       { value: 'ekiten', label: 'エキテン' },
@@ -349,29 +350,13 @@ const QUESTIONS = [
   },
 
   // ─── Section E ───────────────────────────────────────────────
-  {
-    id: 'Q9',
-    section: 'E',
-    type: 'single_choice',
-    label: '今より業務効率化や患者対応がスムーズになる予約管理の仕組みに興味は？',
-    required: true,
-    is_branching_source: true,
-    options: [
-      { value: 'very_interested', label: 'とても興味あり' },
-      { value: 'conditional', label: '条件次第で興味あり' },
-      { value: 'satisfied', label: '今のままで満足' },
-      { value: 'not_interested', label: '興味なし' },
-    ],
-    column_name: 'q9_interest_level',
-    // 分岐：very_interested/conditional → Q10表示、それ以外 → Q10スキップ
-  },
+  // Q9（改善への興味）は削除済み
   {
     id: 'Q10',
     section: 'E',
     type: 'text_area',
-    label: 'どんな条件・機能・サポートがあれば使いますか？',
+    label: 'どんな条件・機能・サポートがあれば予約管理ツールを使いますか？',
     required: false,
-    display_condition: "Q9 == 'very_interested' || Q9 == 'conditional'",
     validation: { max_length: 500 },
     placeholder: '例：月額3,000円以内なら、LINEと連携できるなら、使い方を教えてくれるなら...',
     column_name: 'q10_required_conditions',
@@ -415,6 +400,91 @@ const COLUMN_ORDER = [
   'user_agent',
   'completion_time_seconds',
 ];
+
+/**
+ * 英語ID → 日本語ラベルのマッピング
+ * スプレッドシートへの保存値を日本語化するために使用
+ */
+const VALUE_LABELS = {
+  // Q3
+  paper:              '紙で管理',
+  excel:              'Excel・Googleスプレッドシートで管理',
+  google_calendar:    'Googleカレンダーで管理',
+  reservation_tool:   '予約管理ツール',
+  // Q4
+  stores:             'STORES予約',
+  airreserve:         'Airリザーブ',
+  reserva:            'RESERVA',
+  onemorehand:        'ワンモアハンド',
+  hpb:                'ホットペッパービューティー(サロンボード)',
+  epark:              'EPARK',
+  ekiten:             'エキテン',
+  kenkonihari:        '健康にはり',
+  line_tool:          'LINE連携ツール(リピッテ等)',
+  ripikuru:           'リピくる',
+  shinkyu:            'しんきゅう予約',
+  receipt_machine:    'レセコンに付属する予約機能',
+  hp_form:            'ホームページの予約フォーム',
+  // Q4_2
+  phone:              '電話',
+  in_store:           '店頭（その場で口頭）',
+  shinkyu_compass:    'しんきゅう予約・しんきゅうコンパス',
+  line_official:      'LINE公式アカウント',
+  own_website:        '自院のホームページ',
+  instagram_sns:      'Instagram・SNS',
+  not_using:          'ネット集客は活用していない',
+  // Q5
+  double_booking:           'ダブルブッキングが起こる',
+  input_mistakes:           '記入・入力ミスが起こる',
+  hard_to_read:             '字が読みづらい',
+  no_remote_access:         '外出先から予約状況を確認できない',
+  hard_to_search_history:   '過去の予約履歴を探すのが大変',
+  staff_share_failure:      'スタッフ間の情報共有が漏れる',
+  double_writing:           '予約を別の場所に書き直す二度手間',
+  aggregation_difficult:    '集計・売上分析に手間がかかる',
+  manual_reminder:          'リマインド連絡が手動で大変',
+  no_free_memo:             '自由なメモが書き込めない',
+  no_karte_integration:     '電子カルテ等との連携ができない',
+  complex_operation:        '操作が複雑で習得が大変',
+  no_problem:               '特に困っていない',
+  // Q6
+  familiar:         '操作に慣れている',
+  free_writing:     '自由に書き込める',
+  easy_overview:    '一覧で見やすい',
+  no_cost:          'コストがかからない',
+  easy_share:       'スタッフと共有しやすい',
+  paper_safety:     '紙で残るので安心',
+  no_power_needed:  '電源・ネット接続が不要で安心',
+  automated:        '予約管理が自動化されている',
+  access_anywhere:  'どこからでもアクセスできる',
+  nothing:          '特になし',
+  // Q7
+  data_migration:         '既存データの移行が大変そう',
+  learn_operation:        '操作を覚えるのが大変',
+  staff_training:         'スタッフへの教育・浸透',
+  incompatible_features:  '運用に合わない機能の押し付け',
+  no_free_writing:        '自由に書き込めなくなる',
+  monthly_cost:           '月額費用の継続負担',
+  system_failure:         '通信障害・システム障害',
+  elderly_patients:       '高齢患者がネット予約を使えない',
+  enough_now:             '今のままで十分回っている',
+  uncertain_effect:       '効果が出るか分からない',
+  past_failure:           '過去のデジタル化失敗の経験',
+  no_concern:             '特に不安はない',
+  // Q8
+  immediately:          '予約を受けた瞬間',
+  between_treatments:   '施術の合間',
+  end_of_day:           '営業終了時などにまとめて',
+  auto_recorded:        '予約ツールが自動記録するため意識していない',
+  not_decided:          '特に決まっていない',
+  // Q9（削除済み・後方互換用）
+  very_interested:  'とても興味あり',
+  conditional:      '条件次第で興味あり',
+  satisfied:        '今のままで満足',
+  not_interested:   '興味なし',
+  // 共通
+  other: 'その他',
+};
 
 // 設問IDから設問定義を取得
 function getQuestion(id) {

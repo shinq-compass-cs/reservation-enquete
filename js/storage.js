@@ -133,10 +133,29 @@ function buildPayload(answers, formState, completionTimeSec) {
   const jst = new Date(now.getTime() + jstOffset);
   const timestamp = jst.toISOString().replace('Z', '+09:00');
 
-  // 複数選択はカンマ区切り文字列に変換
+  // 英語ID → 日本語ラベルに変換（questions.js の VALUE_LABELS を参照）
+  function toJP(val) {
+    if (!val) return '';
+    return (typeof VALUE_LABELS !== 'undefined' && VALUE_LABELS[val]) || val;
+  }
+
+  // 複数選択：日本語ラベルのカンマ区切り文字列に変換
   function toCSV(val) {
-    if (Array.isArray(val)) return val.join(',');
-    return val || '';
+    if (Array.isArray(val)) return val.map(toJP).join(',');
+    return toJP(val);
+  }
+
+  // Q4_2 の not_using は Q3 の値によって文言が異なる
+  function toCSVQ4_2(val) {
+    if (!Array.isArray(val)) return toJP(val);
+    return val.map((v) => {
+      if (v === 'not_using') {
+        return answers['Q3'] === 'reservation_tool'
+          ? 'Q4で選んだサービス以外には活用していない'
+          : 'ネット集客は活用していない';
+      }
+      return toJP(v);
+    }).join(',');
   }
 
   const fs = formState || {};
@@ -145,11 +164,11 @@ function buildPayload(answers, formState, completionTimeSec) {
     timestamp,
     q1_clinic_name: String(answers['Q1'] || '').trim(),
     q2_email: String(answers['Q2'] || '').trim(),
-    q3_management_type: answers['Q3'] || '',
+    q3_management_type: toJP(answers['Q3']),
     q3_other_text: fs.q3_other_text || '',
-    q4_reservation_tool: answers['Q4'] || '',
+    q4_reservation_tool: toJP(answers['Q4']),
     q4_other_text: fs.q4_other_text || '',
-    q4_2_marketing_channels: toCSV(answers['Q4_2']),
+    q4_2_marketing_channels: toCSVQ4_2(answers['Q4_2']),
     q4_2_other_text: fs.q4_2_other_text || '',
     q5_difficulties: toCSV(answers['Q5']),
     q5_other_text: fs.q5_other_text || '',
@@ -159,7 +178,7 @@ function buildPayload(answers, formState, completionTimeSec) {
     q7_other_text: fs.q7_other_text || '',
     q8_recording_timing: toCSV(answers['Q8']),
     q8_other_text: fs.q8_other_text || '',
-    q9_interest_level: answers['Q9'] || '',
+    q9_interest_level: '',   // Q9削除済み
     q10_required_conditions: String(answers['Q10'] || '').trim(),
     q11_free_comment: String(answers['Q11'] || '').trim(),
     user_agent: navigator.userAgent,

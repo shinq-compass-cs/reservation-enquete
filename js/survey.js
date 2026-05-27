@@ -78,10 +78,32 @@ function navigateNext() {
   const qId = state.visibleQuestions[state.currentIndex];
   if (!qId) return;
 
-  // 現在の設問の入力値を収集
+  // ── Q1_Q2 グループ画面の処理 ──────────────────────────────
+  if (qId === 'Q1_Q2') {
+    for (const id of ['Q1', 'Q2']) {
+      const { value, formStateUpdate } = collectCurrentInput(id);
+      const result = validateQuestion(id, value, state.answers, {
+        ...state.formState,
+        ...formStateUpdate,
+      });
+      if (!result.valid) {
+        showError(id, result.error);
+        return;
+      }
+      state.answers[id] = value;
+      if (formStateUpdate) Object.assign(state.formState, formStateUpdate);
+    }
+    state.visibleQuestions = getVisibleQuestions(state.answers);
+    state.currentIndex++;
+    saveProgress({ answers: state.answers, formState: state.formState,
+                   currentIndex: state.currentIndex, startTime: state.startTime });
+    renderCurrentQuestion();
+    return;
+  }
+
+  // ── 通常設問の処理 ────────────────────────────────────────
   const { value, formStateUpdate } = collectCurrentInput(qId);
 
-  // バリデーション
   const result = validateQuestion(qId, value, state.answers, {
     ...state.formState,
     ...formStateUpdate,
@@ -92,16 +114,10 @@ function navigateNext() {
     return;
   }
 
-  // 回答を保存
   state.answers[qId] = value;
-  if (formStateUpdate) {
-    Object.assign(state.formState, formStateUpdate);
-  }
+  if (formStateUpdate) Object.assign(state.formState, formStateUpdate);
 
-  // 分岐による表示設問を再計算
   state.visibleQuestions = getVisibleQuestions(state.answers);
-
-  // 進む
   state.currentIndex++;
   saveProgress({
     answers: state.answers,
@@ -121,7 +137,13 @@ function navigateBack() {
 
   // 現在の入力を（バリデーションなしで）暫定保存
   const qId = state.visibleQuestions[state.currentIndex];
-  if (qId) {
+  if (qId === 'Q1_Q2') {
+    ['Q1', 'Q2'].forEach((id) => {
+      const { value, formStateUpdate } = collectCurrentInput(id);
+      state.answers[id] = value;
+      if (formStateUpdate) Object.assign(state.formState, formStateUpdate);
+    });
+  } else if (qId) {
     const { value, formStateUpdate } = collectCurrentInput(qId);
     state.answers[qId] = value;
     if (formStateUpdate) Object.assign(state.formState, formStateUpdate);
@@ -215,13 +237,18 @@ function renderCurrentQuestion() {
   }
 
   const qId = state.visibleQuestions[state.currentIndex];
+
+  // セクションラベルは非表示
+  document.getElementById('section-label').textContent = '';
+
+  // Q1+Q2 グループ画面
+  if (qId === 'Q1_Q2') {
+    renderGroupScreen(['Q1', 'Q2']);
+    return;
+  }
+
   const q = getQuestion(qId);
   if (!q) return;
-
-  // セクションラベルを更新
-  const section = getSection(q.section);
-  const sectionEl = document.getElementById('section-label');
-  sectionEl.textContent = section ? `Section ${section.id}：${section.title}` : '';
 
   // 設問 HTML を生成して描画
   const area = document.getElementById('question-area');
@@ -243,6 +270,26 @@ function renderCurrentQuestion() {
   clearError();
 
   // スクロールを先頭に戻す
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/**
+ * 複数の設問を1画面にまとめて描画する（Q1+Q2 専用）
+ * @param {string[]} qIds - 描画する設問IDの配列
+ */
+function renderGroupScreen(qIds) {
+  const area = document.getElementById('question-area');
+  area.innerHTML = qIds.map((id) => renderQuestion(getQuestion(id))).join('');
+
+  qIds.forEach((id) => {
+    const q = getQuestion(id);
+    restoreAnswer(q);
+    attachEventListeners(q);
+  });
+
+  updateProgress();
+  updateNavButtons();
+  clearError();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
