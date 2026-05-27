@@ -3,6 +3,43 @@
  * 設問のレンダリング・ナビゲーション・状態管理を担当
  */
 
+// ─── セクションテーマ ──────────────────────────────────────────────
+
+/**
+ * セクション別カラーテーマ
+ * accent: メインアクセント / mid: グラデーション用中間色 / light: 背景薄色
+ */
+const SECTION_THEMES = {
+  A: { accent: '#A07828', mid: '#C89A40', light: '#FFF8EC' }, // ゴールデンアンバー（Q1/Q2）
+  B: { accent: '#B85830', mid: '#D87850', light: '#FFF1EA' }, // テラコッタ（Q3/Q4/Q4_2）
+  C: { accent: '#4A7840', mid: '#6A9860', light: '#F0F6EE' }, // セージグリーン（Q5/Q6/Q7）
+  D: { accent: '#3A5E98', mid: '#5A7EB8', light: '#EEF3FA' }, // スレートブルー（Q8）
+  E: { accent: '#6848A0', mid: '#8868C0', light: '#F3EFF8' }, // ソフトパープル（Q10）
+  F: { accent: '#288878', mid: '#48A898', light: '#EDF8F5' }, // カームティール（Q11）
+};
+
+/** 設問ID → セクション */
+const QUESTION_SECTION_MAP = {
+  Q1_Q2: 'A',
+  Q3: 'B', Q4: 'B', Q4_2: 'B',
+  Q5: 'C', Q6: 'C', Q7: 'C',
+  Q8: 'D',
+  Q10: 'E',
+  Q11: 'F',
+};
+
+/**
+ * 設問IDに対応するセクションテーマをCSS変数に適用する
+ * @param {string} qId
+ */
+function applyTheme(qId) {
+  const theme = SECTION_THEMES[QUESTION_SECTION_MAP[qId]] || SECTION_THEMES.A;
+  const root = document.documentElement;
+  root.style.setProperty('--section-accent',       theme.accent);
+  root.style.setProperty('--section-accent-mid',   theme.mid);
+  root.style.setProperty('--section-accent-light', theme.light);
+}
+
 // ─── アプリ状態 ────────────────────────────────────────────────────
 const state = {
   currentIndex: 0,        // visibleQuestions 配列内の現在インデックス
@@ -237,6 +274,9 @@ function renderCurrentQuestion() {
   }
 
   const qId = state.visibleQuestions[state.currentIndex];
+
+  // セクションテーマを適用
+  applyTheme(qId);
 
   // セクションラベルは非表示
   document.getElementById('section-label').textContent = '';
