@@ -59,6 +59,15 @@ function getQ6Options(answers) {
 }
 
 /**
+ * Q7 の表示選択肢を返す（Q3 による動的出し分け）
+ * @param {Object} answers
+ * @returns {Array}
+ */
+function getQ7Options(answers) {
+  return _filterByQ3(getQuestion('Q7').options, answers['Q3']);
+}
+
+/**
  * 設問の表示選択肢を返す（動的出し分けを考慮）
  * @param {string} questionId
  * @param {Object} answers
@@ -72,6 +81,8 @@ function getOptionsForQuestion(questionId, answers) {
       return getQ5Options(answers);
     case 'Q6':
       return getQ6Options(answers);
+    case 'Q7':
+      return getQ7Options(answers);
     default: {
       const q = getQuestion(questionId);
       return q ? q.options || [] : [];
