@@ -277,8 +277,15 @@ function renderCurrentQuestion() {
   // セクションテーマを適用
   applyTheme(qId);
 
-  // セクションラベルは非表示
-  document.getElementById('section-label').textContent = '';
+  // セクションラベル（Q1_Q2 のみ見出しを表示、それ以外は非表示）
+  const sectionLabelEl = document.getElementById('section-label');
+  if (qId === 'Q1_Q2') {
+    sectionLabelEl.textContent = '基本情報を教えてください';
+    sectionLabelEl.style.display = 'block';
+  } else {
+    sectionLabelEl.textContent = '';
+    sectionLabelEl.style.display = 'none';
+  }
 
   // Q1+Q2 グループ画面
   if (qId === 'Q1_Q2') {
@@ -342,6 +349,14 @@ function renderQuestion(q) {
   const subLabel = q.sub_label ? `<div class="question-sub-label">${escHtml(q.sub_label)}</div>` : '';
   const note = q.note ? `<div class="question-note">${escHtml(q.note)}</div>` : '';
 
+  // 選択方式バッジ
+  let choiceTypeBadge = '';
+  if (q.type === 'single_choice') {
+    choiceTypeBadge = '<span class="choice-type-badge choice-type-single">1つ選択</span>';
+  } else if (q.type === 'multiple_choice') {
+    choiceTypeBadge = '<span class="choice-type-badge choice-type-multi">複数選択可</span>';
+  }
+
   let inputHtml = '';
   switch (q.type) {
     case 'text':
@@ -368,6 +383,7 @@ function renderQuestion(q) {
           ${escHtml(q.label)}${requiredBadge}
         </div>
         ${subLabel}
+        ${choiceTypeBadge}
         ${note}
       </div>
       <div class="question-body">
