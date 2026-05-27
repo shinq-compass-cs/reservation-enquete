@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <!-- 検索エンジン・AIクローラー対策 -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>予約管理に関するアンケート | しんきゅうコンパス</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ヘッダー（全画面共通） -->
+    <header class="survey-header" role="banner">
+      <div class="header-inner">
+        <span class="logo-text">しんきゅうコンパス</span>
+        <span class="header-title">予約管理アンケート</span>
+      </div>
+    </header>
+
+    <!-- ════════════════════════════════════════
+         開始画面
+    ════════════════════════════════════════ -->
+    <div id="screen-intro" class="screen active" role="main">
+      <div class="screen-inner">
+        <div class="intro-content">
+          <h1 class="intro-title">鍼灸院 予約管理に関するアンケート</h1>
+          <p class="intro-desc">
+            日頃のご利用、誠にありがとうございます。<br>
+            本アンケートは、鍼灸院の予約管理の実態をお伺いし、より良いサービス改善に活用することを目的としています。
+          </p>
+
+          <div class="intro-meta" role="list" aria-label="アンケートの概要">
+            <div class="intro-meta-item" role="listitem">
+              <span class="meta-icon" aria-hidden="true">⏱</span>
+              <span>回答時間：約5〜7分</span>
+            </div>
+            <div class="intro-meta-item" role="listitem">
+              <span class="meta-icon" aria-hidden="true">📋</span>
+              <span>設問数：8〜11問（回答内容により変わります）</span>
+            </div>
+            <div class="intro-meta-item" role="listitem">
+              <span class="meta-icon" aria-hidden="true">🎁</span>
+              <span>集計結果レポートを後日メールでお送りします</span>
+            </div>
+          </div>
+
+          <p class="intro-privacy">
+            ご入力いただいた情報は、本調査の集計・分析にのみ使用します。第三者への提供は行いません。
+          </p>
+
+          <div style="text-align: center;">
+            <button id="btn-start" class="btn btn-primary btn-large" type="button">
+              アンケートを始める
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         アンケート画面
+    ════════════════════════════════════════ -->
+    <div id="screen-survey" class="screen" role="main" aria-label="アンケート">
+
+      <!-- 進捗バー -->
+      <div class="progress-container" role="progressbar" aria-label="回答の進捗">
+        <div class="progress-bar-wrap">
+          <div id="progress-bar" class="progress-bar" style="width:0%" aria-hidden="true"></div>
+        </div>
+        <div id="progress-text" class="progress-text" aria-live="polite">1 / 10</div>
+      </div>
+
+      <!-- セクションラベル -->
+      <div id="section-label" class="section-label" aria-live="polite"></div>
+
+      <!-- 設問エリア（JS で動的に挿入） -->
+      <div id="question-area" class="question-area"></div>
+
+      <!-- ナビゲーション -->
+      <nav class="nav-container" aria-label="設問ナビゲーション">
+        <button id="btn-back" class="btn btn-secondary" type="button"
+                style="display:none" aria-label="前の設問に戻る">
+          <span class="btn-icon" aria-hidden="true">←</span> 戻る
+        </button>
+        <div style="flex:1"></div>
+        <button id="btn-next" class="btn btn-primary" type="button"
+                aria-label="次の設問へ進む">
+          次へ <span class="btn-icon" aria-hidden="true">→</span>
+        </button>
+        <button id="btn-submit" class="btn btn-primary btn-submit" type="button"
+                style="display:none" aria-label="アンケートを送信する">
+          送信する
+        </button>
+      </nav>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         送信中画面
+    ════════════════════════════════════════ -->
+    <div id="screen-loading" class="screen" role="status" aria-label="送信中">
+      <div class="screen-inner">
+        <div class="loading-content">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>送信中です。しばらくお待ちください...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         完了画面
+    ════════════════════════════════════════ -->
+    <div id="screen-complete" class="screen" role="main" aria-label="送信完了">
+      <div class="screen-inner">
+        <div class="complete-content">
+          <div class="complete-icon" aria-hidden="true">✓</div>
+          <h2 class="complete-title">ご回答ありがとうございました</h2>
+          <p class="complete-desc">
+            集計結果レポートは後日、ご登録のメールアドレスへお送りします。<br>
+            引き続き、しんきゅうコンパスをよろしくお願いいたします。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         エラー画面
+    ════════════════════════════════════════ -->
+    <div id="screen-error" class="screen" role="alert" aria-label="送信エラー">
+      <div class="screen-inner">
+        <div class="error-content">
+          <div class="error-icon" aria-hidden="true">⚠</div>
+          <h2 class="error-title">送信に失敗しました</h2>
+          <p id="error-message" class="error-desc">
+            通信エラーが発生しました。再度お試しください。
+          </p>
+          <button id="btn-retry" class="btn btn-primary" type="button">
+            再送信する
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#app -->
+
+  <!-- スクリプト読み込み（依存順） -->
+  <script src="js/questions.js"></script>
+  <script src="js/branching.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/survey.js"></script>
+</body>
+</html>
