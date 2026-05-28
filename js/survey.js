@@ -23,8 +23,7 @@ const QUESTION_SECTION_MAP = {
   Q1_Q2: 'A',
   Q3: 'B', Q4: 'B', Q4_2: 'B',
   Q5: 'C', Q6: 'C', Q7: 'C',
-  Q8: 'D',
-  Q11: 'E',
+  Q11: 'E', // Q8削除済み・Section D は廃止
 };
 
 /**

@@ -50,7 +50,7 @@ const QUESTIONS = [
     section: 'B',
     type: 'single_choice',
     label: '現在、どんなふうに予約管理をしていますか？',
-    sub_label: '予約台帳を選んでください',
+    sub_label: '予約情報を集約している場を選択してください',
     required: true,
     is_branching_source: true,
     options: [
@@ -112,15 +112,16 @@ const QUESTIONS = [
       { value: 'phone', label: '電話' },
       { value: 'in_store', label: '店頭（口頭）' },
       { value: 'own_website', label: '自院のホームページ' },
+      { value: 'google_maps', label: 'Googleマップ' },
       { value: 'line_official', label: 'LINE公式アカウント' },
       { value: 'instagram_sns', label: 'Instagram' },
       { value: 'facebook', label: 'Facebook' },
       { value: 'other_sns', label: 'そのほかSNS' },
-      { value: 'hpb', label: 'ホットペッパービューティー（サロンボード）' },
+      { value: 'hpb', label: 'ホットペッパービューティー' },
       { value: 'epark', label: 'EPARK' },
       { value: 'ekiten', label: 'エキテン' },
       { value: 'kenkonihari', label: '健康にはり' },
-      { value: 'shinkyu_compass', label: 'しんきゅうコンパス（しんきゅう予約）' },
+      { value: 'shinkyu_compass', label: 'しんきゅうコンパス' },
       {
         value: 'other',
         label: 'その他（自由記述）',
@@ -199,6 +200,11 @@ const QUESTIONS = [
         value: 'complex_operation',
         label: '操作が複雑で習得が大変',
         visible_when: { Q3: ['reservation_tool', 'other'] },
+      },
+      {
+        value: 'it_stressful',
+        label: 'ITが苦手',
+        visible_when: { Q3: ['paper', 'excel', 'google_calendar', 'reservation_tool', 'other'] },
       },
       {
         value: 'no_problem',
@@ -328,24 +334,7 @@ const QUESTIONS = [
     other_text_column: 'q7_other_text',
   },
 
-  // ─── Section D ───────────────────────────────────────────────
-  {
-    id: 'Q8',
-    section: 'D',
-    type: 'multiple_choice',
-    label: '予約を（紙・エクセル・予約ツールなど）に記録するタイミングは？',
-    required: false,
-    options: [
-      { value: 'immediately', label: '予約を受けた瞬間' },
-      { value: 'between_treatments', label: '施術の合間' },
-      { value: 'end_of_day', label: '営業終了時などにまとめて' },
-      { value: 'auto_recorded', label: '予約ツールが自動的に記録するため、意識していない' },
-      { value: 'not_decided', label: '特に決まっていない' },
-      { value: 'other', label: 'その他', has_text_input: true },
-    ],
-    column_name: 'q8_recording_timing',
-    other_text_column: 'q8_other_text',
-  },
+  // ─── Section D (Q8) は削除済み ─────────────────────────────────
 
   // ─── Section F ───────────────────────────────────────────────
   // ※ Section E (Q9, Q10) は削除済み
@@ -378,8 +367,8 @@ const COLUMN_ORDER = [
   'q6_other_text',
   'q7_concerns',
   'q7_other_text',
-  'q8_recording_timing',
-  'q8_other_text',
+  'q8_recording_timing',  // Q8削除済み（列は維持）
+  'q8_other_text',        // Q8削除済み（列は維持）
   'q9_interest_level',   // Q9削除済み（列は維持）
   'q10_required_conditions', // Q10削除済み（列は維持）
   'q11_free_comment',
@@ -402,7 +391,7 @@ const VALUE_LABELS = {
   airreserve:         'Airリザーブ',
   reserva:            'RESERVA',
   onemorehand:        'ワンモアハンド',
-  hpb:                'ホットペッパービューティー（サロンボード）',
+  hpb:                'ホットペッパービューティー',
   epark:              'EPARK',
   ekiten:             'エキテン',
   kenkonihari:        '健康にはり',
@@ -414,7 +403,8 @@ const VALUE_LABELS = {
   // Q4_2
   phone:              '電話',
   in_store:           '店頭（口頭）',
-  shinkyu_compass:    'しんきゅうコンパス（しんきゅう予約）',
+  shinkyu_compass:    'しんきゅうコンパス',
+  google_maps:        'Googleマップ',
   line_official:      'LINE公式アカウント',
   own_website:        '自院のホームページ',
   instagram_sns:      'Instagram',
@@ -435,6 +425,7 @@ const VALUE_LABELS = {
   no_karte_integration:     '電子カルテ等との連携ができない',
   complex_operation:        '操作が複雑で習得が大変',
   no_problem:               '特に困っていない',
+  it_stressful:             'ITが苦手',
   // Q6
   familiar:         '操作に慣れている',
   free_writing:     '自由に書き込める',

@@ -25,7 +25,7 @@ function getVisibleQuestions(answers) {
   }
 
   // Q9・Q10 削除済み
-  list.push('Q4_2', 'Q5', 'Q6', 'Q7', 'Q8', 'Q11');
+  list.push('Q4_2', 'Q5', 'Q6', 'Q7', 'Q11');
   return list;
 }
 
